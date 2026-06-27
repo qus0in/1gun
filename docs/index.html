@@ -205,6 +205,46 @@ curl -fsSL https://raw.githubusercontent.com/qus0in/1ggun/main/install.sh | bash
   </section>
 
   <section>
+    <h2 class="h4 mb-3">훅 설정 구조</h2>
+    <p class="text-secondary small">설치 스크립트가 자동으로 작성하는 훅 설정. 수동 구성 시 참고.</p>
+    <div class="d-flex flex-column gap-3">
+      <div>
+        <h3 class="h6 mb-1">Claude Code — <code>.claude/settings.json</code></h3>
+        <pre>{
+  "hooks": {
+    "SessionStart":      [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh cc SessionStart",      "timeout": 30}]}],
+    "UserPromptSubmit":  [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh cc UserPromptSubmit",  "timeout": 30}]}],
+    "PermissionRequest": [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh cc PermissionRequest", "timeout": 30}]}],
+    "Notification":      [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh cc Notification",      "timeout": 30}]}],
+    "Stop":              [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh cc Stop",              "timeout": 30}]}]
+  }
+}</pre>
+      </div>
+      <div>
+        <h3 class="h6 mb-1">Codex — <code>.codex/hooks.json</code></h3>
+        <pre>{
+  "hooks": {
+    "SessionStart":      [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh codex SessionStart",      "timeout": 30}]}],
+    "UserPromptSubmit":  [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh codex UserPromptSubmit",  "timeout": 30}]}],
+    "PermissionRequest": [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh codex PermissionRequest", "timeout": 30}]}],
+    "Stop":              [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh codex Stop",              "timeout": 30}]}]
+  }
+}</pre>
+      </div>
+      <div>
+        <h3 class="h6 mb-1">Antigravity CLI — <code>.agents/hooks.json</code></h3>
+        <pre>{
+  "AGY": {
+    "enabled": true,
+    "PreInvocation": [{"type": "command", "command": "bash sound_hook.sh agy PreInvocation", "timeout": 30}],
+    "Stop":          [{"type": "command", "command": "bash sound_hook.sh agy Stop",          "timeout": 30}]
+  }
+}</pre>
+      </div>
+    </div>
+  </section>
+
+  <section>
     <h2 class="h4 mb-3">커스터마이징</h2>
     <p class="text-secondary">이벤트별 재생 파일 변경 시 <code>.agents/sound_hook.sh</code> 수정.</p>
   </section>

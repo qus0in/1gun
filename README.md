@@ -136,6 +136,49 @@ curl -fsSL https://raw.githubusercontent.com/qus0in/1ggun/main/install.sh | bash
 | `jp_m1.mp3` | 갑니다요         |
 | `jp_m2.mp3` | 아 녜녜          |
 
+## 훅 설정 구조
+
+설치 스크립트가 자동으로 작성하는 훅 설정. 수동 구성 시 참고.
+
+### Claude Code — `.claude/settings.json`
+
+```json
+{
+  "hooks": {
+    "SessionStart":      [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh cc SessionStart",      "timeout": 30}]}],
+    "UserPromptSubmit":  [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh cc UserPromptSubmit",  "timeout": 30}]}],
+    "PermissionRequest": [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh cc PermissionRequest", "timeout": 30}]}],
+    "Notification":      [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh cc Notification",      "timeout": 30}]}],
+    "Stop":              [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh cc Stop",              "timeout": 30}]}]
+  }
+}
+```
+
+### Codex — `.codex/hooks.json`
+
+```json
+{
+  "hooks": {
+    "SessionStart":      [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh codex SessionStart",      "timeout": 30}]}],
+    "UserPromptSubmit":  [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh codex UserPromptSubmit",  "timeout": 30}]}],
+    "PermissionRequest": [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh codex PermissionRequest", "timeout": 30}]}],
+    "Stop":              [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh codex Stop",              "timeout": 30}]}]
+  }
+}
+```
+
+### Antigravity CLI — `.agents/hooks.json`
+
+```json
+{
+  "AGY": {
+    "enabled": true,
+    "PreInvocation": [{"type": "command", "command": "bash sound_hook.sh agy PreInvocation", "timeout": 30}],
+    "Stop":          [{"type": "command", "command": "bash sound_hook.sh agy Stop",          "timeout": 30}]
+  }
+}
+```
+
 ## 커스터마이징
 
 이벤트별 재생 파일 변경 시 `.agents/sound_hook.sh` 수정.
