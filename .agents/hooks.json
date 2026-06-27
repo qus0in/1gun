@@ -1,0 +1,19 @@
+{
+  "AGY": {
+    "enabled": true,
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "bash sound_hook.sh agy PreInvocation",
+        "timeout": 30
+      }
+    ],
+    "Stop": [
+      {
+        "type": "command",
+        "command": "bash sound_hook.sh agy Stop",
+        "timeout": 30
+      }
+    ]
+  }
+}
