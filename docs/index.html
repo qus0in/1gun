@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>1ggun</title>
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232b2b2b'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='sans-serif' font-weight='bold' font-size='18' fill='%23e8d5a3'%3E꾼%3C/text%3E%3C/svg%3E">
+
+  <meta property="og:title" content="1ggun">
+  <meta property="og:description" content="Claude Code, Codex, Antigravity CLI에 사운드 훅 추가. 임진록 2+ 조선의 반격 일꾼 목소리가 이벤트에 반응.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://qus0in.github.io/1ggun/">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/variable/pretendardvariable-dynamic-subset.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      color: #333;
+    }
+    h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+      font-family: 'Paperlogy', serif;
+    }
+    .hero { background: #f8f9fa; border-bottom: 1px solid #dee2e6; }
+    pre {
+      background: #f1f3f5;
+      border-radius: 6px;
+      padding: 1rem;
+      font-size: .875rem;
+      overflow-x: auto;
+      white-space: pre;
+      word-break: normal;
+    }
+    .table th { white-space: nowrap; }
+    footer a { color: inherit; }
+
+    @media (max-width: 374px) {
+      .hero { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }
+      .container { padding-left: .75rem; padding-right: .75rem; }
+      pre { font-size: .75rem; padding: .625rem; }
+      .table-sm td, .table-sm th { padding: .25rem .35rem; font-size: .8rem; }
+      code { font-size: .8em; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero py-5">
+  <div class="container">
+    <h1 class="fw-bold mb-2">1ggun</h1>
+    <p class="lead text-secondary mb-0"><strong>Claude Code</strong>, <strong>Codex</strong>, <strong>Antigravity CLI</strong>에 사운드 훅 추가.<br>각 에이전트마다 임진록 2+ 조선의 반격 일꾼 목소리가 이벤트에 반응.</p>
+  </div>
+</div>
+
+<div class="container py-5 d-flex flex-column gap-5">
+
+  <section>
+    <h2 class="h4 mb-3">설치</h2>
+    <p class="text-secondary small">프로젝트 루트에서 실행. 동일한 명령어 재실행으로 업데이트 가능.</p>
+
+    <h3 class="h6 mt-4 mb-2">macOS</h3>
+    <p class="text-secondary small"><code>jq</code> 미설치 시 Homebrew로 먼저 설치:</p>
+    <pre>brew install jq
+curl -fsSL https://raw.githubusercontent.com/qus0in/1ggun/main/install.sh | bash</pre>
+
+    <h3 class="h6 mt-4 mb-2">Linux</h3>
+    <pre># Debian / Ubuntu
+sudo apt install -y curl jq
+
+# Fedora / RHEL
+sudo dnf install -y curl jq</pre>
+    <pre>curl -fsSL https://raw.githubusercontent.com/qus0in/1ggun/main/install.sh | bash</pre>
+
+    <h3 class="h6 mt-4 mb-2">Windows</h3>
+    <p class="text-secondary small"><strong>Git Bash 또는 WSL2 환경 권장.</strong> PowerShell · cmd 미지원.<br>
+    JSON 처리 도구 자동 감지 순서: 파일 미존재 시 직접 생성 → <code>jq</code> → <code>python</code> → 사용자 확인.</p>
+    <p class="text-secondary small fw-semibold mb-1">Git Bash (<a href="https://gitforwindows.org/" target="_blank" rel="noopener">Git for Windows</a> 포함):</p>
+    <pre>curl -fsSL https://raw.githubusercontent.com/qus0in/1ggun/main/install.sh | bash</pre>
+    <p class="text-secondary small fw-semibold mb-1">WSL2 (Ubuntu 등):</p>
+    <pre>sudo apt install -y curl jq
+curl -fsSL https://raw.githubusercontent.com/qus0in/1ggun/main/install.sh | bash</pre>
+
+    <h3 class="h6 mt-4 mb-2">생성/수정 파일</h3>
+    <pre>.agents/
+  sound_hook.sh        # 훅 실행 스크립트
+  sound/               # MP3 파일들
+  hooks.json           # AGY 훅 설정
+.claude/
+  settings.json        # Claude Code 훅 설정
+.codex/
+  hooks.json           # Codex 훅 설정</pre>
+  </section>
+
+  <section>
+    <h2 class="h4 mb-3">지원 환경</h2>
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle">
+        <thead class="table-light">
+          <tr><th>OS</th><th>재생 방식</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>macOS</td><td><code>afplay</code></td></tr>
+          <tr><td>Linux</td><td><code>paplay</code> / <code>aplay</code> / <code>ffplay</code> / <code>mpg123</code> (순서대로 시도)</td></tr>
+          <tr><td>Windows (Git Bash / WSL2)</td><td>PowerShell MediaPlayer</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="h4 mb-3">에이전트별 목소리</h2>
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle">
+        <thead class="table-light">
+          <tr><th>에이전트</th><th>인자</th><th>목소리</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Claude Code</td><td><code>cc</code></td><td>조선 일꾼</td></tr>
+          <tr><td>Codex</td><td><code>codex</code></td><td>일본 일꾼</td></tr>
+          <tr><td>Antigravity CLI</td><td><code>agy</code></td><td>명 일꾼</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="h4 mb-3">이벤트 매핑</h2>
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle text-center">
+        <thead class="table-light">
+          <tr>
+            <th class="text-start">이벤트</th>
+            <th>cc (조선 일꾼)</th>
+            <th>codex (일본 일꾼)</th>
+            <th>agy (명 일꾼)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="text-start"><code>SessionStart</code></td><td>찾으셨나요</td><td>갑니다요</td><td class="text-secondary">-</td></tr>
+          <tr><td class="text-start"><code>UserPromptSubmit</code></td><td>그렇게 합죠</td><td>녜녜 그렇게 합죠</td><td class="text-secondary">-</td></tr>
+          <tr><td class="text-start"><code>PermissionRequest</code></td><td>열심히 하겠습니다</td><td>걱정마십쇼</td><td class="text-secondary">-</td></tr>
+          <tr><td class="text-start"><code>Notification</code></td><td>말씀하세요</td><td class="text-secondary">-</td><td class="text-secondary">-</td></tr>
+          <tr><td class="text-start"><code>Stop</code></td><td>말씀하세요</td><td>어떤 일을 할까요</td><td>분부만 내리세요</td></tr>
+          <tr><td class="text-start"><code>PreInvocation</code></td><td class="text-secondary">-</td><td class="text-secondary">-</td><td>네네 알겠습니다요</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="h4 mb-3">사운드 파일 목록</h2>
+    <p class="text-secondary small"><code>.agents/sound/</code> 하위 구성. 이벤트 매핑에 쓰이지 않는 파일도 포함되어 있으며 커스터마이징에 활용 가능.</p>
+    <div class="d-flex flex-column flex-md-row gap-4">
+      <div class="flex-fill" style="min-width:0">
+        <h3 class="h6 mb-2">조선 일꾼 <span class="text-secondary fw-normal">(<code>sound/ko/</code>)</span></h3>
+        <div class="table-responsive">
+          <table class="table table-sm table-bordered align-middle mb-0">
+            <thead class="table-light"><tr><th>파일</th><th>대사</th><th>미리 듣기</th></tr></thead>
+            <tbody>
+              <tr><td><code>ko_s1.mp3</code></td><td>찾으셨나요</td><td><button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="togglePlay(this,'ko/ko_s1.mp3')">▶</button></td></tr>
+              <tr><td><code>ko_s2.mp3</code></td><td>말씀하세요</td><td><button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="togglePlay(this,'ko/ko_s2.mp3')">▶</button></td></tr>
+              <tr><td><code>ko_s3.mp3</code></td><td>예</td><td><button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="togglePlay(this,'ko/ko_s3.mp3')">▶</button></td></tr>
+              <tr><td><code>ko_h1.mp3</code></td><td>일하러 갑니다요</td><td><button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="togglePlay(this,'ko/ko_h1.mp3')">▶</button></td></tr>
+              <tr><td><code>ko_h2.mp3</code></td><td>그렇게 합죠</td><td><button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="togglePlay(this,'ko/ko_h2.mp3')">▶</button></td></tr>
+              <tr><td><code>ko_h3.mp3</code></td><td>열심히 하겠습니다</td><td><button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="togglePlay(this,'ko/ko_h3.mp3')">▶</button></td></tr>
+              <tr><td><code>ko_m1.mp3</code></td><td>갑니다요</td><td><button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="togglePlay(this,'ko/ko_m1.mp3')">▶</button></td></tr>
+              <tr><td><code>ko_m2.mp3</code></td><td>예 갑니다</td><td><button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="togglePlay(this,'ko/ko_m2.mp3')">▶</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="flex-fill" style="min-width:0">
+        <h3 class="h6 mb-2">명 일꾼 <span class="text-secondary fw-normal">(<code>sound/ch/</code>)</span></h3>
+        <div class="table-responsive">
+          <table class="table table-sm table-bordered align-middle mb-0">
+            <thead class="table-light"><tr><th>파일</th><th>대사</th><th>미리 듣기</th></tr></thead>
+            <tbody>
+              <tr><td><code>ch_s1.mp3</code></td><td>일해야죠</td><td><button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="togglePlay(this,'ch/ch_s1.mp3')">▶</button></td></tr>
+              <tr><td><code>ch_s2.mp3</code></td><td>분부만 내리세요</td><td><button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="togglePlay(this,'ch/ch_s2.mp3')">▶</button></td></tr>
+              <tr><td><code>ch_m1.mp3</code></td><td>네네 알겠습니다요</td><td><button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="togglePlay(this,'ch/ch_m1.mp3')">▶</button></td></tr>
+              <tr><td><code>ch_h1.mp3</code></td><td>그렇게 합죠</td><td><button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="togglePlay(this,'ch/ch_h1.mp3')">▶</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="flex-fill" style="min-width:0">
+        <h3 class="h6 mb-2">일본 일꾼 <span class="text-secondary fw-normal">(<code>sound/jp/</code>)</span></h3>
+        <div class="table-responsive">
+          <table class="table table-sm table-bordered align-middle mb-0">
+            <thead class="table-light"><tr><th>파일</th><th>대사</th><th>미리 듣기</th></tr></thead>
+            <tbody>
+              <tr><td><code>jp_s1.mp3</code></td><td>어떤 일을 할까요</td><td><button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="togglePlay(this,'jp/jp_s1.mp3')">▶</button></td></tr>
+              <tr><td><code>jp_s2.mp3</code></td><td>녜녜녜녜</td><td><button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="togglePlay(this,'jp/jp_s2.mp3')">▶</button></td></tr>
+              <tr><td><code>jp_h1.mp3</code></td><td>걱정마십쇼</td><td><button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="togglePlay(this,'jp/jp_h1.mp3')">▶</button></td></tr>
+              <tr><td><code>jp_h2.mp3</code></td><td>녜녜 그렇게 합죠</td><td><button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="togglePlay(this,'jp/jp_h2.mp3')">▶</button></td></tr>
+              <tr><td><code>jp_m1.mp3</code></td><td>갑니다요</td><td><button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="togglePlay(this,'jp/jp_m1.mp3')">▶</button></td></tr>
+              <tr><td><code>jp_m2.mp3</code></td><td>아 녜녜</td><td><button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="togglePlay(this,'jp/jp_m2.mp3')">▶</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="h4 mb-3">커스터마이징</h2>
+    <p class="text-secondary">이벤트별 재생 파일 변경 시 <code>.agents/sound_hook.sh</code> 수정.</p>
+  </section>
+
+  <hr>
+
+  <div class="d-flex flex-column flex-sm-row gap-4 text-secondary small">
+    <section class="flex-fill">
+      <h2 class="h6 mb-2">영감</h2>
+      <p class="mb-0"><a href="http://peonping.com/" target="_blank" rel="noopener">PeonPing</a>에서 아이디어를 얻어 훅(hooks)과 셸 스크립트로 구현.</p>
+    </section>
+    <section class="flex-fill">
+      <h2 class="h6 mb-2">출처</h2>
+      <p class="mb-0">사운드 원본: 게임 <strong>임진록 2+ 조선의 반격</strong> 각 진영 일꾼 유닛 효과음.<br>
+      유튜브 채널 <a href="https://www.youtube.com/@%EA%B6%8C%EC%9C%A8" target="_blank" rel="noopener">권율</a> 영상에서 발췌:
+      <a href="https://www.youtube.com/watch?v=W9v_7TyGC3E" target="_blank" rel="noopener">조선 일꾼</a> ·
+      <a href="https://www.youtube.com/watch?v=C-TCE3xOF0U" target="_blank" rel="noopener">명 일꾼</a> ·
+      <a href="https://www.youtube.com/watch?v=j1hfb-0lzYM" target="_blank" rel="noopener">일본 일꾼</a></p>
+    </section>
+    <section class="flex-fill">
+      <h2 class="h6 mb-2">저작권 고지</h2>
+      <ul class="mb-0 ps-3">
+        <li>임진록 2+ 조선의 반격은 현재 어밴던웨어(abandonware)로 분류됨</li>
+        <li>실질적인 저작권 행사 주체 없음 → 최종적으로 인천시청에 의해 몰수됨 (<a href="https://namu.wiki/w/%EC%9E%84%EC%A7%84%EB%A1%9D%202#s-8" target="_blank" rel="noopener">근거</a>)</li>
+        <li>저작권 소멸을 의미하지 않음</li>
+        <li><strong>상업적 활용 시 법적 위험 있음</strong></li>
+      </ul>
+    </section>
+  </div>
+
+</div>
+
+<footer class="border-top py-3 text-center text-secondary small">
+  <div class="container">
+    <a href="https://github.com/qus0in/1ggun" target="_blank" rel="noopener">GitHub</a> &middot; MIT License
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const BASE = 'https://raw.githubusercontent.com/qus0in/1ggun/main/.agents/sound/';
+  let current = null;
+
+  function togglePlay(btn, file) {
+    if (current) {
+      current.audio.pause();
+      current.audio.currentTime = 0;
+      current.btn.textContent = '▶';
+      const prev = current;
+      current = null;
+      if (prev.file === file) return;
+    }
+    const audio = new Audio(BASE + file);
+    btn.textContent = '■';
+    audio.play();
+    audio.onended = () => { btn.textContent = '▶'; current = null; };
+    current = { audio, btn, file };
+  }
+</script>
+</body>
+</html>
