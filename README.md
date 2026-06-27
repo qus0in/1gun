@@ -82,11 +82,11 @@ curl -fsSL https://raw.githubusercontent.com/qus0in/1ggun/main/install.sh | bash
 
 ## 에이전트별 목소리
 
-| 에이전트        | 인자    | 목소리    | 비고 |
-| --------------- | ------- | --------- | ---- |
-| Claude Code     | `cc`    | 조선 일꾼 | |
+| 에이전트        | 인자    | 목소리    | 비고                        |
+| --------------- | ------- | --------- | --------------------------- |
+| Claude Code     | `cc`    | 조선 일꾼 |                             |
 | Codex           | `codex` | 일본 일꾼 | 훅 실행 시 사용자 승인 필요 |
-| Antigravity CLI | `agy`   | 명 일꾼   | |
+| Antigravity CLI | `agy`   | 명 일꾼   |                             |
 
 > **Codex**: 훅 명령어 실행 전 터미널에서 승인 여부를 묻는 프롬프트가 표시됨. 매번 수동으로 허용해야 사운드가 재생됨.
 
@@ -147,11 +147,61 @@ curl -fsSL https://raw.githubusercontent.com/qus0in/1ggun/main/install.sh | bash
 ```json
 {
   "hooks": {
-    "SessionStart":      [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh cc SessionStart",      "timeout": 30}]}],
-    "UserPromptSubmit":  [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh cc UserPromptSubmit",  "timeout": 30}]}],
-    "PermissionRequest": [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh cc PermissionRequest", "timeout": 30}]}],
-    "Notification":      [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh cc Notification",      "timeout": 30}]}],
-    "Stop":              [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh cc Stop",              "timeout": 30}]}]
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .agents/sound_hook.sh cc SessionStart",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .agents/sound_hook.sh cc UserPromptSubmit",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .agents/sound_hook.sh cc PermissionRequest",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .agents/sound_hook.sh cc Notification",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .agents/sound_hook.sh cc Stop",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
   }
 }
 ```
@@ -161,10 +211,50 @@ curl -fsSL https://raw.githubusercontent.com/qus0in/1ggun/main/install.sh | bash
 ```json
 {
   "hooks": {
-    "SessionStart":      [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh codex SessionStart",      "timeout": 30}]}],
-    "UserPromptSubmit":  [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh codex UserPromptSubmit",  "timeout": 30}]}],
-    "PermissionRequest": [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh codex PermissionRequest", "timeout": 30}]}],
-    "Stop":              [{"hooks": [{"type": "command", "command": "bash .agents/sound_hook.sh codex Stop",              "timeout": 30}]}]
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .agents/sound_hook.sh codex SessionStart",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .agents/sound_hook.sh codex UserPromptSubmit",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .agents/sound_hook.sh codex PermissionRequest",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .agents/sound_hook.sh codex Stop",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
   }
 }
 ```
@@ -175,8 +265,20 @@ curl -fsSL https://raw.githubusercontent.com/qus0in/1ggun/main/install.sh | bash
 {
   "AGY": {
     "enabled": true,
-    "PreInvocation": [{"type": "command", "command": "bash sound_hook.sh agy PreInvocation", "timeout": 30}],
-    "Stop":          [{"type": "command", "command": "bash sound_hook.sh agy Stop",          "timeout": 30}]
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "bash sound_hook.sh agy PreInvocation",
+        "timeout": 30
+      }
+    ],
+    "Stop": [
+      {
+        "type": "command",
+        "command": "bash sound_hook.sh agy Stop",
+        "timeout": 30
+      }
+    ]
   }
 }
 ```
@@ -188,7 +290,6 @@ curl -fsSL https://raw.githubusercontent.com/qus0in/1ggun/main/install.sh | bash
 ## 출처
 
 - 사운드 원본: 게임 **임진록 2+ 조선의 반격** 각 진영 일꾼 유닛 효과음.
-
 - 유튜브 채널 [권율](https://www.youtube.com/@%EA%B6%8C%EC%9C%A8) 영상에서 발췌:
   - [조선 일꾼](https://www.youtube.com/watch?v=W9v_7TyGC3E)
   - [명 일꾼](https://www.youtube.com/watch?v=C-TCE3xOF0U)
@@ -198,9 +299,7 @@ curl -fsSL https://raw.githubusercontent.com/qus0in/1ggun/main/install.sh | bash
 
 - 임진록 2+ 조선의 반격은 현재 어밴던웨어(abandonware)로 분류됨
   - 현재 실질적인 저작권 행사 주체 없음 → 최종적으로 인천시청에 의해 몰수됨 ([근거](https://namu.wiki/w/%EC%9E%84%EC%A7%84%EB%A1%9D%202#s-8))
-
 - 하지만 이것이 곧 저작권 소멸을 의미하는 것은 아님
-
 - ⚠️ **상업적 활용 시 법적 위험 있음**
 
 ## 라이센스
