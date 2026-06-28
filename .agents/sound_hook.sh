@@ -3,11 +3,19 @@
 agent="$1"
 SOUND="$(dirname "$0")/sound"
 
+input=""
+
 if [ -n "$2" ]; then
     hook_event_name="$2"
+
+    # agy PreInvocation에서도 payload는 stdin JSON으로 들어오므로
+    # invocationNum은 인자가 아니라 jq로 읽는다.
+    input=$(cat)
+    invocation_num=$(echo "$input" | jq -r '.invocationNum // empty')
 else
     input=$(cat)
-    hook_event_name=$(echo "$input" | jq -r '.hook_event_name')
+    hook_event_name=$(echo "$input" | jq -r '.hook_event_name // empty')
+    # invocation_num=$(echo "$input" | jq -r '.invocationNum // empty')
 fi
 
 play() {
@@ -85,7 +93,11 @@ case "$agent" in
         ;;
     agy)
         case "$hook_event_name" in
-            PreInvocation) play "$SOUND/ch/ch_m1.mp3" ;; # 네네 알겠습니다요
+            PreInvocation)
+                if [ "$invocation_num" = "0" ]; then
+                    play "$SOUND/ch/ch_m1.mp3" # 네네 알겠습니다요
+                fi
+                ;;
             Stop)          play "$SOUND/ch/ch_s2.mp3" ;; # 분부만 내리세요
         esac
         ;;
